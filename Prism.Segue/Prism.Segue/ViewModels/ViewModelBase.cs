@@ -1,9 +1,10 @@
 ﻿using Prism.Mvvm;
 using Prism.Navigation;
+using Prism.Segue.Application.Segue;
 
 namespace Prism.Segue.Application.ViewModels
 {
-    public class ViewModelBase : BindableBase, INavigationAware, IDestructible
+    public class ViewModelBase : BindableBase, INavigationAware, IDestructible, INavigatable
     {
         public INavigationService NavigationService { get; private set; }
 

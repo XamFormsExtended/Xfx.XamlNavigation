@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Input;
 using Prism.Navigation;
-using Prism.Segue.Application.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -65,6 +64,7 @@ namespace Prism.Segue.Application.Segue
                     case NavigationType.GoBack:
                         await _navService.GoBackAsync(_navigationParameters);
                         return;
+                    // ReSharper disable once RedundantCaseLabel
                     case NavigationType.Auto:
                     default:
                         useModalNavigation = null;
@@ -122,11 +122,10 @@ namespace Prism.Segue.Application.Segue
                 segueItem = _valueTargetProvider.TargetObject;
             }
 
-            if (rootObject is Page page && page.BindingContext is ViewModelBase vm) _navService = vm.NavigationService;
-            if (segueItem != null && segueItem is BindableObject bindable)
-            {
+            if (rootObject is Page page && page.BindingContext is INavigatable vm) 
+                _navService = vm.NavigationService;
+            if (segueItem != null && segueItem is BindableObject bindable) 
                 _navigationParameters = GetNavigationParameters(bindable);
-            }
         }
 
         private void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
