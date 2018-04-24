@@ -7,7 +7,6 @@ using Prism.Navigation;
 using Prism.Segue.Application.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using Xamarin.Forms.Xaml.Internals;
 
 namespace Prism.Segue.Application.Segue
 {
@@ -30,7 +29,7 @@ namespace Prism.Segue.Application.Segue
         private bool _navigating;
         private INavigationService _navService;
         private IRootObjectProvider _rootObjectProvider;
-        private SimpleValueTargetProvider _valueTargetProvider;
+        private IProvideValueTarget _valueTargetProvider;
         private NavigationParameters _navigationParameters;
         public bool AllowDoubleTap { get; set; } = false;
         public bool Animated { get; set; } = true;
@@ -91,8 +90,8 @@ namespace Prism.Segue.Application.Segue
         {
             if (serviceProvider == null) throw new ArgumentNullException("serviceProvider");
 
+            _valueTargetProvider = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;
             _rootObjectProvider = serviceProvider.GetService(typeof(IRootObjectProvider)) as IRootObjectProvider;
-            _valueTargetProvider = serviceProvider.GetService(typeof(IProvideValueTarget)) as SimpleValueTargetProvider;
 
             return this;
         }
@@ -103,7 +102,7 @@ namespace Prism.Segue.Application.Segue
             // if XamlCompilation is active, IRootObjectProvider is not available, but SimpleValueTargetProvider is available
             // if XamlCompilation is inactive, IRootObjectProvider is available, but SimpleValueTargetProvider is not available
             object rootObject;
-            object segueItem = null;
+            object segueItem;
             if (_rootObjectProvider == null && _valueTargetProvider == null)
                 throw new ArgumentException("serviceProvider does not provide an IRootObjectProvider or SimpleValueTargetProvider");
             if (_rootObjectProvider == null)
@@ -120,6 +119,7 @@ namespace Prism.Segue.Application.Segue
             else
             {
                 rootObject = _rootObjectProvider.RootObject;
+                segueItem = _valueTargetProvider.TargetObject;
             }
 
             if (rootObject is Page page && page.BindingContext is ViewModelBase vm) _navService = vm.NavigationService;
