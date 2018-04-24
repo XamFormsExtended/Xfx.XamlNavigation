@@ -5,8 +5,8 @@
              x:Class="Prism.Segue.Application.Views.MainPage"
              Title="{Binding Title}">
 
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Label Text="Welcome to Xamarin Forms and Prism!" />
+    <StackLayout>
+        <Label Text="Welcome to Xamarin Forms and Prism! (MAIN)" />
         <Button Text="Go to about" Command="{segue:Uri}" CommandParameter="About"></Button>
     </StackLayout>
 

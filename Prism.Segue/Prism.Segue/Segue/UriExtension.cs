@@ -13,7 +13,7 @@ namespace Prism.Segue.Application.Segue
 {
     public enum UseModalNavigation
     {
-        Auto,Modal,Hierarchical,BackToRoot
+        Auto,Modal,Hierarchical,GoBack,BackToRoot
     }
 
     [ContentProperty(nameof(UseModalNavigation))]
@@ -54,7 +54,10 @@ namespace Prism.Segue.Application.Segue
                         break;
                     case UseModalNavigation.BackToRoot:
                         await _navService.GoBackToRootAsync();
-                        break;
+                        return;
+                    case UseModalNavigation.GoBack:
+                        await _navService.GoBackAsync();
+                        return;
                 }
 
                 switch (parameter)
@@ -63,7 +66,7 @@ namespace Prism.Segue.Application.Segue
                         await _navService.NavigateAsync(uri, useModalNavigation: useModalNavigation, animated: Animated);
                         break;
                     default:
-                        await _navService.NavigateAsync(parameter.ToString(), useModalNavigation: useModalNavigation, animated: Animated);
+                        await _navService.NavigateAsync(parameter?.ToString(), useModalNavigation: useModalNavigation, animated: Animated);
                         break;
                 }
             }

@@ -34,6 +34,7 @@ namespace Prism.Segue.Application
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage,MainPageViewModel>();
             containerRegistry.RegisterForNavigation<About,AboutPageModel>();
+            containerRegistry.RegisterForNavigation<Secret,SecretPageModel>();
         }
     }
 }
