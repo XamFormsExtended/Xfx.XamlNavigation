@@ -23,6 +23,15 @@ namespace Prism.Segue.Application.ViewModels
             set => SetProperty(ref _isModal, value);
         }
 
+
+        private string _senderTitle;
+
+        public string SenderTitle
+        {
+            get => _senderTitle;
+            set => SetProperty(ref _senderTitle, value);
+        }
+
         public override void OnNavigatingTo(NavigationParameters parameters)
         {
             if (parameters.TryGetValue("isModal", out bool isModal))
@@ -35,6 +44,14 @@ namespace Prism.Segue.Application.ViewModels
                 IsModal = false;
                 IsHierarchical = true;
             }
+
+            var from = "unknown";
+            if (parameters.TryGetValue(nameof(AboutPageModel), out AboutPageModel sender))
+            {
+                from = sender.Title;
+            }
+            
+            SenderTitle = $"Sent from {from}";
         }
     }
 }

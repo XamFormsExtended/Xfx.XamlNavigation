@@ -2,12 +2,18 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:segue="clr-namespace:Prism.Segue.Application.Segue;assembly=Prism.Segue"
-             x:Class="Prism.Segue.Application.Views.About">
+             x:Class="Prism.Segue.Application.Views.About"
+             Title="{Binding Title}">
     <ContentPage.Content>
         <StackLayout >
             <Label Text="Welcome to Xamarin.Forms! (ABOUT)"  />
-            <Button Text="Secret Modal" Command="{segue:Uri Modal}" CommandParameter="Secret?isModal=true"/>
-            <Button Text="Secret Page" Command="{segue:Uri Hierarchical}" CommandParameter="Secret"/>
+            <Button Text="Secret Modal" 
+                    Command="{segue:Uri Modal}" 
+                    CommandParameter="Secret?isModal=true"/>
+            <Button Text="Secret Page" 
+                    Command="{segue:Uri Hierarchical}" 
+                    CommandParameter="Secret" 
+                    segue:Uri.NavigationParameters="{Binding SecretPageParameters}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

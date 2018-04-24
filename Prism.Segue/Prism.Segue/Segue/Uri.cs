@@ -11,22 +11,27 @@ using Xamarin.Forms.Xaml.Internals;
 
 namespace Prism.Segue.Application.Segue
 {
-    public enum UseModalNavigation
-    {
-        Auto,
-        Modal,
-        Hierarchical,
-        GoBack,
-        BackToRoot
-    }
-
     [ContentProperty(nameof(UseModalNavigation))]
-    public class UriExtension : IMarkupExtension, ICommand
+    public class Uri : IMarkupExtension, ICommand
     {
+        public static readonly BindableProperty NavigationParametersProperty =
+            BindableProperty.CreateAttached ("NavigationParameters", typeof(NavigationParameters), typeof(Uri), null);
+
+        public static NavigationParameters GetNavigationParameters (BindableObject view)
+        {
+            return (NavigationParameters)view.GetValue (NavigationParametersProperty);
+        }
+
+        public static void SetNavigationParameters (BindableObject view, NavigationParameters value)
+        {
+            view.SetValue (NavigationParametersProperty, value);
+        }
+
         private bool _navigating;
         private INavigationService _navService;
         private IRootObjectProvider _rootObjectProvider;
         private SimpleValueTargetProvider _valueTargetProvider;
+        private NavigationParameters _navigationParameters;
         public bool AllowDoubleTap { get; set; } = false;
         public bool Animated { get; set; } = true;
         public UseModalNavigation UseModalNavigation { get; set; } = UseModalNavigation.Auto;
@@ -46,7 +51,7 @@ namespace Prism.Segue.Application.Segue
             
             if (_navService != null)
             {
-                bool? useModalNavigation = null;
+                bool? useModalNavigation;
                 switch (UseModalNavigation)
                 {
                     case UseModalNavigation.Modal:
@@ -56,10 +61,10 @@ namespace Prism.Segue.Application.Segue
                         useModalNavigation = false;
                         break;
                     case UseModalNavigation.BackToRoot:
-                        await _navService.GoBackToRootAsync();
+                        await _navService.GoBackToRootAsync(_navigationParameters);
                         return;
                     case UseModalNavigation.GoBack:
-                        await _navService.GoBackAsync();
+                        await _navService.GoBackAsync(_navigationParameters);
                         return;
                     case UseModalNavigation.Auto:
                     default:
@@ -69,11 +74,11 @@ namespace Prism.Segue.Application.Segue
 
                 switch (parameter)
                 {
-                    case Uri uri:
-                        await _navService.NavigateAsync(uri, useModalNavigation: useModalNavigation, animated: Animated);
+                    case System.Uri uri:
+                        await _navService.NavigateAsync(uri,_navigationParameters, useModalNavigation, Animated);
                         break;
                     default:
-                        await _navService.NavigateAsync(parameter?.ToString(), useModalNavigation: useModalNavigation, animated: Animated);
+                        await _navService.NavigateAsync(parameter?.ToString(),_navigationParameters, useModalNavigation, Animated);
                         break;
                 }
             }
@@ -98,6 +103,7 @@ namespace Prism.Segue.Application.Segue
             // if XamlCompilation is active, IRootObjectProvider is not available, but SimpleValueTargetProvider is available
             // if XamlCompilation is inactive, IRootObjectProvider is available, but SimpleValueTargetProvider is not available
             object rootObject;
+            object segueItem = null;
             if (_rootObjectProvider == null && _valueTargetProvider == null)
                 throw new ArgumentException("serviceProvider does not provide an IRootObjectProvider or SimpleValueTargetProvider");
             if (_rootObjectProvider == null)
@@ -105,9 +111,10 @@ namespace Prism.Segue.Application.Segue
                 PropertyInfo propertyInfo = _valueTargetProvider.GetType().GetTypeInfo().DeclaredProperties.FirstOrDefault(dp => dp.Name.Contains("ParentObjects"));
                 if (propertyInfo == null) throw new ArgumentNullException("ParentObjects");
 
-                var parentObjects = propertyInfo.GetValue(_valueTargetProvider) as IEnumerable<object>;
+                var parentObjects = (propertyInfo.GetValue(_valueTargetProvider) as IEnumerable<object>).ToList();
                 var parentObject = parentObjects.FirstOrDefault(pO => pO.GetType().GetTypeInfo().IsSubclassOf(typeof(Page)));
 
+                segueItem = parentObjects.FirstOrDefault();
                 rootObject = parentObject ?? throw new ArgumentNullException("parentObject");
             }
             else
@@ -116,6 +123,10 @@ namespace Prism.Segue.Application.Segue
             }
 
             if (rootObject is Page page && page.BindingContext is ViewModelBase vm) _navService = vm.NavigationService;
+            if (segueItem != null && segueItem is BindableObject bindable)
+            {
+                _navigationParameters = GetNavigationParameters(bindable);
+            }
         }
 
         private void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
