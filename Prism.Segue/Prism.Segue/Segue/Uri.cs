@@ -10,7 +10,7 @@ using Xamarin.Forms.Xaml;
 
 namespace Prism.Segue.Application.Segue
 {
-    [ContentProperty(nameof(UseModalNavigation))]
+    [ContentProperty(nameof(NavigationType))]
     public class Uri : IMarkupExtension, ICommand
     {
         public static readonly BindableProperty NavigationParametersProperty =
@@ -33,7 +33,7 @@ namespace Prism.Segue.Application.Segue
         private NavigationParameters _navigationParameters;
         public bool AllowDoubleTap { get; set; } = false;
         public bool Animated { get; set; } = true;
-        public UseModalNavigation UseModalNavigation { get; set; } = UseModalNavigation.Auto;
+        public NavigationType NavigationType { get; set; } = NavigationType.Auto;
 
         public bool CanExecute(object parameter)
         {
@@ -51,21 +51,21 @@ namespace Prism.Segue.Application.Segue
             if (_navService != null)
             {
                 bool? useModalNavigation;
-                switch (UseModalNavigation)
+                switch (NavigationType)
                 {
-                    case UseModalNavigation.Modal:
+                    case NavigationType.Modal:
                         useModalNavigation = true;
                         break;
-                    case UseModalNavigation.Hierarchical:
+                    case NavigationType.Hierarchical:
                         useModalNavigation = false;
                         break;
-                    case UseModalNavigation.BackToRoot:
+                    case NavigationType.BackToRoot:
                         await _navService.GoBackToRootAsync(_navigationParameters);
                         return;
-                    case UseModalNavigation.GoBack:
+                    case NavigationType.GoBack:
                         await _navService.GoBackAsync(_navigationParameters);
                         return;
-                    case UseModalNavigation.Auto:
+                    case NavigationType.Auto:
                     default:
                         useModalNavigation = null;
                         break;

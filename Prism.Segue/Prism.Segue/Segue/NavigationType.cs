@@ -1,6 +1,6 @@
 ﻿namespace Prism.Segue.Application.Segue
 {
-    public enum UseModalNavigation
+    public enum NavigationType
     {
         Auto,
         Modal,
