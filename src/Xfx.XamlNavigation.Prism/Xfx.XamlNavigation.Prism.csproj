@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.4;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard1.0;netstandard2.0</TargetFrameworks>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
     <AssemblyFileVersion>0.1.0.0</AssemblyFileVersion>
@@ -13,11 +13,11 @@
     <NeutralLanguage>en</NeutralLanguage>
     <PackageLicenseUrl>https://github.com/XamFormsExtended/Xfx.XamlNavigation/blob/master/LICENSE</PackageLicenseUrl>
     <Owners>Xam Forms Extended (Xfx), Chase Florell</Owners>
-    <PackageProjectUrl>https://github.com/TorontoMobileDevelopers/HttpTracer</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/XamFormsExtended/Xfx.XamlNavigation</PackageProjectUrl>
     <Summary>Xamarin Forms Prism navigation wrapped up in Markup Extensions</Summary>
     <PackageTags>xamarin, xamarin-forms, ios, android, navigation, prism</PackageTags>
     <Title>Xamarin Forms Xaml Navigation (Prism)</Title>
-    <Description>A simple http tracing library to write request and response information to your output window. Making your life easier when debugging http calls!</Description>
+    <Description>Navigate throughout your app via Prism from within your Xaml.</Description>
     <Copyright>(2018) Xam Forms Extended (Xfx) &amp; Chase Florell</Copyright>
     <RepositoryUrl>https://github.com/XamFormsExtended/Xfx.XamlNavigation</RepositoryUrl>
     <PackageReleaseNotes>See: https://github.com/XamFormsExtended/Xfx.XamlNavigation</PackageReleaseNotes>
@@ -30,7 +30,7 @@
     <PackageReference Include="Xamarin.Forms" Version="2.5.1.444934" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.4' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
   </ItemGroup>
 
