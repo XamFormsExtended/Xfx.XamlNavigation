@@ -1,5 +1,4 @@
-﻿using System;
-using Prism.Navigation;
+﻿using Prism.Navigation;
 using Xamarin.Forms;
 
 namespace Xfx.XamlNavigation.Prism
@@ -20,8 +19,7 @@ namespace Xfx.XamlNavigation.Prism
 
         public override async void Execute(object parameter)
         {
-            parameter = parameter ?? new NavigationParameters();
-            if (!(parameter is NavigationParameters parameters)) throw new ArgumentException(NavParameterMessage, nameof(parameter));
+            var parameters = GetNavigationParametersFromCommandParameter(parameter);
 
             _navigating = true;
             RaiseCanExecuteChanged();

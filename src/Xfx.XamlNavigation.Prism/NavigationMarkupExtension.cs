@@ -64,5 +64,21 @@ namespace Xfx.XamlNavigation.Prism
         {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
+
+        protected NavigationParameters GetNavigationParametersFromCommandParameter(object parameter)
+        {
+            if (parameter is NavigationParameters parameters) return parameters;
+            if (parameter is XamlNavigationParameters xamlParameters)
+            {
+                parameters = new NavigationParameters();
+                foreach (var p in xamlParameters)
+                {
+                    parameters.Add(p.Key,p.Value);
+                }
+
+                return parameters;
+            }
+            throw new ArgumentException(NavParameterMessage, nameof(parameter));
+        }
     }
 }
