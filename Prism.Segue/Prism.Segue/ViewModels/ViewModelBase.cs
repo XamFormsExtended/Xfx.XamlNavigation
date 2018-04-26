@@ -1,18 +1,18 @@
 ﻿using Prism.Mvvm;
 using Prism.Navigation;
-using Prism.Segue.Application.Prism;
+using Xfx.XamlNavigation.Prism;
 
 namespace Prism.Segue.Application.ViewModels
 {
     public class ViewModelBase : BindableBase, INavigationAware, IDestructible, INavigatable
     {
-        public INavigationService NavigationService { get; private set; }
+        public INavigationService NavigationService { get; }
 
         private string _title;
         public string Title
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            get => _title;
+            set => SetProperty(ref _title, value);
         }
 
         public ViewModelBase(INavigationService navigationService)
@@ -20,24 +20,12 @@ namespace Prism.Segue.Application.ViewModels
             NavigationService = navigationService;
         }
 
-        public virtual void OnNavigatedFrom(NavigationParameters parameters)
-        {
-            
-        }
+        public virtual void OnNavigatedFrom(NavigationParameters parameters) { }
 
-        public virtual void OnNavigatedTo(NavigationParameters parameters)
-        {
-            
-        }
+        public virtual void OnNavigatedTo(NavigationParameters parameters){ }
 
-        public virtual void OnNavigatingTo(NavigationParameters parameters)
-        {
-            
-        }
+        public virtual void OnNavigatingTo(NavigationParameters parameters){ }
 
-        public virtual void Destroy()
-        {
-            
-        }
+        public virtual void Destroy(){ }
     }
 }

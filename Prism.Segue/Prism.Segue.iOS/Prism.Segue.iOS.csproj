@@ -189,7 +189,7 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
+    <PackageReference Include="Xamarin.Forms" Version="2.5.1.444934" />
     <PackageReference Include="Prism.Autofac.Forms" Version="7.0.0.396" />
   </ItemGroup>
   <ItemGroup>

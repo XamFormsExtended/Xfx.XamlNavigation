@@ -2,7 +2,7 @@
 using Prism.Navigation;
 using Xamarin.Forms;
 
-namespace Prism.Segue.Application.Prism
+namespace Xfx.XamlNavigation.Prism
 {
     [ContentProperty(nameof(GoBackType))]
     public class GoBack : NavigationMarkupExtension

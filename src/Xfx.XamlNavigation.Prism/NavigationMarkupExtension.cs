@@ -7,7 +7,7 @@ using Prism.Navigation;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Prism.Segue.Application.Prism
+namespace Xfx.XamlNavigation.Prism
 {
     public abstract class NavigationMarkupExtension : IMarkupExtension, ICommand
     {
