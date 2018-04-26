@@ -20,8 +20,8 @@ namespace Xfx.XamlNavigation.Prism
         private IProvideValueTarget _valueTargetProvider;
 
         public bool AllowDoubleTap { get; set; } = false;
-        public event EventHandler CanExecuteChanged;
         public abstract bool CanExecute(object parameter);
+        public event EventHandler CanExecuteChanged;
         public abstract void Execute(object parameter);
 
         public object ProvideValue(IServiceProvider serviceProvider)
@@ -29,8 +29,29 @@ namespace Xfx.XamlNavigation.Prism
             if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
             _valueTargetProvider = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;
             _rootObjectProvider = serviceProvider.GetService(typeof(IRootObjectProvider)) as IRootObjectProvider;
-            
+
             return this;
+        }
+
+        protected NavigationParameters GetNavigationParametersFromCommandParameter(object parameter)
+        {
+            parameter = parameter ?? new NavigationParameters();
+            if (parameter is NavigationParameters parameters) return parameters;
+            if (parameter is XamlNavigationParameter xamlParameter)
+                return new NavigationParameters {{xamlParameter.Key, xamlParameter.Value}};
+            if (parameter is XamlNavigationParameters xamlParameters)
+            {
+                parameters = new NavigationParameters();
+                for (var index = 0; index < xamlParameters.Count; index++)
+                {
+                    var p = xamlParameters[index];
+                    parameters.Add(p.Key, p.Value);
+                }
+
+                return parameters;
+            }
+
+            throw new ArgumentException(NavParameterMessage, nameof(parameter));
         }
 
         protected void InitNavService()
@@ -67,24 +88,9 @@ namespace Xfx.XamlNavigation.Prism
             }
         }
 
-        protected void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-
-        protected NavigationParameters GetNavigationParametersFromCommandParameter(object parameter)
+        protected void RaiseCanExecuteChanged()
         {
-            parameter = parameter ?? new NavigationParameters();
-            if (parameter is NavigationParameters parameters) return parameters;
-            if (parameter is XamlNavigationParameters xamlParameters)
-            {
-                parameters = new NavigationParameters();
-                for (var index = 0; index < xamlParameters.Count; index++)
-                {
-                    var p = xamlParameters[index];
-                    parameters.Add(p.Key, p.Value);
-                }
-
-                return parameters;
-            }
-            throw new ArgumentException(NavParameterMessage, nameof(parameter));
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }
