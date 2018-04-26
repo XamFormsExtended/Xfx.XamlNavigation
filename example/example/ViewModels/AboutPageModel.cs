@@ -7,7 +7,7 @@ namespace example.ViewModels
     {
         private NavigationParameters _secretPageParameters;
 
-        public AboutPageModel(INavigationService navigationService) : base(navigationService)
+        public AboutPageModel()
         {
             SecretPageParameters = new NavigationParameters()
             {

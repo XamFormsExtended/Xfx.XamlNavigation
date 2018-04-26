@@ -8,10 +8,6 @@ namespace example.ViewModels
         private bool _isModal;
         private string _senderTitle;
 
-        public SecretPageModel(INavigationService navigationService) : base(navigationService)
-        {
-        }
-
         public bool IsHierarchical
         {
             get => _isHierarchical;
