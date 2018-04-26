@@ -1,6 +1,6 @@
 ﻿using Prism.Mvvm;
 using Prism.Navigation;
-using Prism.Segue.Application.Segue;
+using Prism.Segue.Application.Prism;
 
 namespace Prism.Segue.Application.ViewModels
 {

@@ -1,6 +1,6 @@
 ﻿using Prism.Navigation;
 
-namespace Prism.Segue.Application.Segue
+namespace Prism.Segue.Application.Prism
 {
     public interface INavigatable
     {

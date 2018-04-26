@@ -6,6 +6,7 @@ namespace Prism.Segue.Application.ViewModels
     {
         private bool _isHierarchical;
         private bool _isModal;
+        private string _senderTitle;
 
         public SecretPageModel(INavigationService navigationService) : base(navigationService)
         {
@@ -23,9 +24,6 @@ namespace Prism.Segue.Application.ViewModels
             set => SetProperty(ref _isModal, value);
         }
 
-
-        private string _senderTitle;
-
         public string SenderTitle
         {
             get => _senderTitle;
@@ -34,7 +32,8 @@ namespace Prism.Segue.Application.ViewModels
 
         public override void OnNavigatingTo(NavigationParameters parameters)
         {
-            if (parameters.TryGetValue("isModal", out bool isModal))
+            if (parameters.TryGetValue("_prism", out NavigationParameters prism)
+                && prism.TryGetValue("UseModalNavigation", out bool isModal))
             {
                 IsModal = isModal;
                 IsHierarchical = !isModal;
@@ -46,11 +45,8 @@ namespace Prism.Segue.Application.ViewModels
             }
 
             var from = "unknown";
-            if (parameters.TryGetValue(nameof(AboutPageModel), out AboutPageModel sender))
-            {
-                from = sender.Title;
-            }
-            
+            if (parameters.TryGetValue(nameof(AboutPageModel), out AboutPageModel sender)) from = sender.Title;
+
             SenderTitle = $"Sent from {from}";
         }
     }
