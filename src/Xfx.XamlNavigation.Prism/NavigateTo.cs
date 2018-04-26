@@ -4,7 +4,7 @@ using Xamarin.Forms;
 namespace Xfx.XamlNavigation.Prism
 {
     [ContentProperty(nameof(Name))]
-    public class NavigateTo : NavigationMarkupExtension
+    public class NavigateTo : Navigation
     {
         private bool _navigating;
 
@@ -14,7 +14,8 @@ namespace Xfx.XamlNavigation.Prism
 
         public override bool CanExecute(object parameter)
         {
-            return AllowDoubleTap || !_navigating;
+            var canNavigate = GetCanNavigateProperty(Bindable);
+            return canNavigate && (AllowDoubleTap || !_navigating);
         }
 
         public override async void Execute(object parameter)
@@ -23,7 +24,6 @@ namespace Xfx.XamlNavigation.Prism
 
             _navigating = true;
             RaiseCanExecuteChanged();
-            InitNavService();
             parameters.Add("_prism", new NavigationParameters
             {
                 {nameof(Animated), Animated},
