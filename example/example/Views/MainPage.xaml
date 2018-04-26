@@ -8,7 +8,7 @@
 
     <StackLayout>
         <Label Text="Welcome to Xamarin Forms and Prism! (MAIN)" />
-        <Button x:Name="MyButton" Text="Go to about" Command="{prism:NavigateTo 'About'}" >
+        <Button Text="Go to about" Command="{prism:NavigateTo 'About'}" >
             <Button.CommandParameter>
                 <prism:XamlNavigationParameters Parent="{x:Reference this}">
                     <prism:XamlNavigationParameter Key="MainPageViewModel" Value="{Binding .}" />
