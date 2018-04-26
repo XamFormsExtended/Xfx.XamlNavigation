@@ -9,7 +9,6 @@ namespace Prism.Segue.Application.Prism
     {
         private bool _navigating;
 
-        public bool AllowDoubleTap { get; set; } = false;
         public bool Animated { get; set; } = true;
         public GoBackType GoBackType { get; set; } = GoBackType.Default;
         public bool? UseModalNavigation { get; set; } = null;
@@ -27,11 +26,11 @@ namespace Prism.Segue.Application.Prism
             _navigating = true;
             RaiseCanExecuteChanged();
             InitNavService();
-            parameters.Add("_prism",new NavigationParameters
+            parameters.Add("_prism", new NavigationParameters
             {
-                {nameof(Animated),Animated},
-                {nameof(GoBackType),GoBackType},
-                {nameof(UseModalNavigation),UseModalNavigation},
+                {nameof(Animated), Animated},
+                {nameof(GoBackType), GoBackType},
+                {nameof(UseModalNavigation), UseModalNavigation}
             });
 
             if (GoBackType == GoBackType.ToRoot)

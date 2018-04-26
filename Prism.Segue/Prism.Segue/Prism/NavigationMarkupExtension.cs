@@ -11,10 +11,23 @@ namespace Prism.Segue.Application.Prism
 {
     public abstract class NavigationMarkupExtension : IMarkupExtension, ICommand
     {
+        protected const string NavParameterMessage = "Command Parameter must be of type NavigationParameter";
         protected INavigationService NavigationService;
         private IRootObjectProvider _rootObjectProvider;
         private IProvideValueTarget _valueTargetProvider;
-        protected const string NavParameterMessage = "Command Parameter must be of type NavigationParameter";
+        public bool AllowDoubleTap { get; set; } = false;
+        public abstract bool CanExecute(object parameter);
+        public event EventHandler CanExecuteChanged;
+        public abstract void Execute(object parameter);
+
+        public object ProvideValue(IServiceProvider serviceProvider)
+        {
+            if (serviceProvider == null) throw new ArgumentNullException("serviceProvider");
+            _valueTargetProvider = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;
+            _rootObjectProvider = serviceProvider.GetService(typeof(IRootObjectProvider)) as IRootObjectProvider;
+            return this;
+        }
+
         protected void InitNavService()
         {
             if (NavigationService != null) return;
@@ -47,16 +60,9 @@ namespace Prism.Segue.Application.Prism
             //    _navigationParameters = GetNavigationParameters(bindable);
         }
 
-        protected void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-        public object ProvideValue(IServiceProvider serviceProvider)
+        protected void RaiseCanExecuteChanged()
         {
-            if (serviceProvider == null) throw new ArgumentNullException("serviceProvider");
-            _valueTargetProvider = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;
-            _rootObjectProvider = serviceProvider.GetService(typeof(IRootObjectProvider)) as IRootObjectProvider;
-            return this;
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
-        public abstract bool CanExecute(object parameter);
-        public abstract void Execute(object parameter);
-        public event EventHandler CanExecuteChanged;
     }
 }
