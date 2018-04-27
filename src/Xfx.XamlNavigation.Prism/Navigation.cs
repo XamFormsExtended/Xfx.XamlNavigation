@@ -30,13 +30,20 @@ namespace Xfx.XamlNavigation.Prism
 
 
         protected BindableObject Bindable;
+        protected bool IsNavigating;
         protected INavigationService NavigationService;
         protected Page Page;
         private IRootObjectProvider _rootObjectProvider;
         private IProvideValueTarget _valueTargetProvider;
 
         public bool AllowDoubleTap { get; set; } = false;
-        public abstract bool CanExecute(object parameter);
+
+        public bool CanExecute(object parameter)
+        {
+            var canNavigate = GetCanNavigateProperty(Bindable);
+            return canNavigate && (AllowDoubleTap || !IsNavigating);
+        }
+
         public event EventHandler CanExecuteChanged;
         public abstract void Execute(object parameter);
 
