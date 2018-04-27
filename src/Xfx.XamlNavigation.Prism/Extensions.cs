@@ -5,7 +5,7 @@ namespace Xfx.XamlNavigation.Prism
 {
     public static class Extensions
     {
-        private const string NavParameterMessage = "Command Parameter must be of type NavigationParameter";
+        private const string NavParameterMessage = "Command Parameter must be of type NavigationParameters, XamlNavigationParameter, or XamlNavigationParameters";
 
         public static NavigationParameters ToNavigationParameters(this object parameter)
         {

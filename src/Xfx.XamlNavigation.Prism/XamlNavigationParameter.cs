@@ -1,5 +1,4 @@
-﻿using Prism.Navigation;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace Xfx.XamlNavigation.Prism
 {
