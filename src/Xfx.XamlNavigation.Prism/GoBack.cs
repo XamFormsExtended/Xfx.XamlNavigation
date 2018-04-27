@@ -12,7 +12,7 @@ namespace Xfx.XamlNavigation.Prism
 
         public override async void Execute(object parameter)
         {
-            var parameters = GetNavigationParametersFromCommandParameter(parameter);
+            var parameters = parameter.ToNavigationParameters();
 
             IsNavigating = true;
             RaiseCanExecuteChanged();
