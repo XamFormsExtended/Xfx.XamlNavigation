@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Prism.Navigation;
 using Xamarin.Forms;
 
 namespace Xfx.XamlNavigation.Prism
@@ -74,5 +76,17 @@ namespace Xfx.XamlNavigation.Prism
         public bool Remove(XamlNavigationParameter item) => _list.Remove(item);
 
         public void RemoveAt(int index) => _list.RemoveAt(index);
+
+        public NavigationParameters ToNavigationParameters()
+        {
+            var parameters = new NavigationParameters();
+            for (var index = 0; index < _list.Count; index++)
+            {
+                var parameter = _list[index];
+                parameters.Add(parameter.Key, parameter.Value);
+            }
+
+            return parameters;
+        }
     }
 }

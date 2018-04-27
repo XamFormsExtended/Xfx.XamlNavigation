@@ -69,21 +69,16 @@ namespace Xfx.XamlNavigation.Prism
         protected NavigationParameters GetNavigationParametersFromCommandParameter(object parameter)
         {
             parameter = parameter ?? new NavigationParameters();
-            if (parameter is NavigationParameters parameters) return parameters;
-            if (parameter is XamlNavigationParameter xamlParameter)
-                return new NavigationParameters {{xamlParameter.Key, xamlParameter.Value}};
-            if (parameter is XamlNavigationParameters xamlParameters)
+            switch (parameter)
             {
-                parameters = new NavigationParameters();
-                for (var index = 0; index < xamlParameters.Count; index++)
-                {
-                    var p = xamlParameters[index];
-                    parameters.Add(p.Key, p.Value);
-                }
-
-                return parameters;
+                case NavigationParameters parameters:
+                    return parameters;
+                case XamlNavigationParameter xamlParameter:
+                    return new NavigationParameters {{xamlParameter.Key, xamlParameter.Value}};
+                case XamlNavigationParameters xamlParameters:
+                    return xamlParameters.ToNavigationParameters();
             }
-
+            
             throw new ArgumentException(NavParameterMessage, nameof(parameter));
         }
 
