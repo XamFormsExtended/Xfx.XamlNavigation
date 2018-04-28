@@ -14,7 +14,7 @@ namespace Xfx.XamlNavigation.Prism
 {
     public abstract class Navigation : IMarkupExtension, ICommand
     {
-        internal static readonly BindableProperty RaiseCanExecuteChangedInternalProperty =
+        protected internal static readonly BindableProperty RaiseCanExecuteChangedInternalProperty =
             BindableProperty.CreateAttached("RaiseCanExecuteChangedInternal",
                 typeof(Action),
                 typeof(Navigation),
@@ -26,22 +26,12 @@ namespace Xfx.XamlNavigation.Prism
                 typeof(Navigation),
                 true,
                 propertyChanged: OnCanNavigatePropertyChanged);
-
-        public static void SetCanNavigate(BindableObject view, bool value)
-        {
-            view.SetValue(CanNavigateProperty, value);
-        }
-
-        public static bool GetCanNavigate(BindableObject view)
-        {
-            return (bool) view.GetValue(CanNavigateProperty);
-        }
-
+        
         protected BindableObject Bindable;
+        protected IEnumerable<BindableObject> BindableTree;
         protected bool IsNavigating;
         protected INavigationService NavigationService;
         protected Page Page;
-        protected IEnumerable<BindableObject> BindableTree;
 
         public bool AllowDoubleTap { get; set; } = false;
 
@@ -53,6 +43,7 @@ namespace Xfx.XamlNavigation.Prism
                 canNavigate = GetCanNavigate(bindableObject);
                 if (!canNavigate) break;
             }
+
             return canNavigate && (AllowDoubleTap || !IsNavigating);
         }
 
@@ -68,11 +59,15 @@ namespace Xfx.XamlNavigation.Prism
             return this;
         }
 
+        public static bool GetCanNavigate(BindableObject view) => (bool) view.GetValue(CanNavigateProperty);
+
+        public static void SetCanNavigate(BindableObject view, bool value) => view.SetValue(CanNavigateProperty, value);
+
+        protected internal static Action GetRaiseCanExecuteChangedInternal(BindableObject view) => (Action) view.GetValue(RaiseCanExecuteChangedInternalProperty);
+
+        protected internal static void SetRaiseCanExecuteChangedInternal(BindableObject view, Action value) => view.SetValue(RaiseCanExecuteChangedInternalProperty, value);
+
         protected void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-
-        internal static Action GetRaiseCanExecuteChangedInternal(BindableObject view) => (Action) view.GetValue(RaiseCanExecuteChangedInternalProperty);
-
-        internal static void SetRaiseCanExecuteChangedInternal(BindableObject view, Action value) => view.SetValue(RaiseCanExecuteChangedInternalProperty, value);
 
         private void InitNavService(IProvideValueTarget valueTargetProvider, IRootObjectProvider rootObjectProvider)
         {
@@ -81,7 +76,7 @@ namespace Xfx.XamlNavigation.Prism
             // if XamlCompilation is inactive, IRootObjectProvider is available, but SimpleValueTargetProvider is not available
             object rootObject;
             //object bindable;
-            
+
             var propertyInfo = valueTargetProvider.GetType().GetTypeInfo().DeclaredProperties.FirstOrDefault(dp => dp.Name.Contains("ParentObjects"));
             if (propertyInfo == null) throw new ArgumentNullException("ParentObjects");
             var parentObjects = (propertyInfo.GetValue(valueTargetProvider) as IEnumerable<object>).ToList();
