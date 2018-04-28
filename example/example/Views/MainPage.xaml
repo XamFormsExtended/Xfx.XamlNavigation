@@ -15,6 +15,13 @@
                 </prism:XamlNavigationParameters>
             </Button.CommandParameter>
         </Button>
+        <ContentView>
+            <ContentView prism:Navigation.CanNavigate="False">
+                <ContentView>
+                    <Button Text="Cannot Navigate" Command="{prism:GoBack}" /> 
+                </ContentView>
+            </ContentView>
+        </ContentView>
     </StackLayout>
 
 </ContentPage>

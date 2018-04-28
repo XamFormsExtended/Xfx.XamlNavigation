@@ -2,7 +2,6 @@
 
 namespace example.Views
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class Secret
 	{
 		public Secret ()
