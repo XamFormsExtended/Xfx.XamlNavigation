@@ -1,27 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Xfx.XamlNavigation.Prism;assembly=Xfx.XamlNavigation.Prism"
              x:Class="example.Views.MainPage"
              Title="{Binding Title}"
              x:Name="this">
 
-    <StackLayout>
-        <Label Text="Welcome to Xamarin Forms and Prism! (MAIN)" />
-        <Button Text="Go to about" Command="{prism:NavigateTo 'About'}" prism:Navigation.CanNavigate="{Binding CanNavigate}" >
-            <Button.CommandParameter>
-                <prism:XamlNavigationParameters Parent="{x:Reference this}">
-                    <prism:XamlNavigationParameter Key="MainPageViewModel" Value="{Binding .}" />
-                </prism:XamlNavigationParameters>
-            </Button.CommandParameter>
-        </Button>
-        <ContentView>
-            <ContentView prism:Navigation.CanNavigate="False">
+    <MasterDetailPage.Master>
+        <NavigationPage Title="Master">
+            <x:Arguments>
+                <ContentPage >
+                    <StackLayout>
+                        <Button Text="Go to about (1)" Command="{prism:NavigateTo 'About'}" prism:Navigation.CanNavigate="{Binding CanNavigate}" >
+                            <Button.CommandParameter>
+                                <prism:XamlNavigationParameters Parent="{x:Reference this}">
+                                    <prism:XamlNavigationParameter Key="MainPageViewModel" Value="{Binding .}" />
+                                </prism:XamlNavigationParameters>
+                            </Button.CommandParameter>
+                        </Button>
+                        <Button Text="Go to about (2)" Command="{prism:NavigateTo 'About'}" prism:Navigation.CanNavigate="{Binding CanNavigate}" >
+                            <Button.CommandParameter>
+                                <prism:XamlNavigationParameters Parent="{x:Reference this}">
+                                    <prism:XamlNavigationParameter Key="MainPageViewModel" Value="{Binding .}" />
+                                </prism:XamlNavigationParameters>
+                            </Button.CommandParameter>
+                        </Button>
+                        <Button Text="Go to about (3)" Command="{prism:NavigateTo 'About', Page={x:Reference this}}}" prism:Navigation.CanNavigate="{Binding CanNavigate}" >
+                            <Button.CommandParameter>
+                                <prism:XamlNavigationParameters Parent="{x:Reference this}">
+                                    <prism:XamlNavigationParameter Key="MainPageViewModel" Value="{Binding .}" />
+                                </prism:XamlNavigationParameters>
+                            </Button.CommandParameter>
+                        </Button>
+                    </StackLayout>
+                </ContentPage>
+            </x:Arguments>
+        </NavigationPage>
+    </MasterDetailPage.Master>
+    <MasterDetailPage.Detail>
+        <ContentPage x:Name="detail">
+            <StackLayout>
+                <Label Text="Welcome to Xamarin Forms and Prism! (MAIN)" />
+                <Button Text="Go to about" Command="{prism:NavigateTo 'About'}" prism:Navigation.CanNavigate="{Binding CanNavigate}" >
+                    <Button.CommandParameter>
+                        <prism:XamlNavigationParameters>
+                            <prism:XamlNavigationParameter Key="MainPageViewModel" Value="{Binding .}" />
+                        </prism:XamlNavigationParameters>
+                    </Button.CommandParameter>
+                </Button>
                 <ContentView>
-                    <Button Text="Cannot Navigate" Command="{prism:GoBack}" /> 
+                    <ContentView prism:Navigation.CanNavigate="False">
+                        <ContentView>
+                            <Button Text="Cannot Navigate" Command="{prism:GoBack}" />
+                        </ContentView>
+                    </ContentView>
                 </ContentView>
-            </ContentView>
-        </ContentView>
-    </StackLayout>
+            </StackLayout>
+        </ContentPage>
+    </MasterDetailPage.Detail>
 
-</ContentPage>
+
+</MasterDetailPage>

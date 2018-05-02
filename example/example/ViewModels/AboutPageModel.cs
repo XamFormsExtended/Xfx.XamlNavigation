@@ -3,7 +3,7 @@ using Prism.Navigation;
 
 namespace example.ViewModels
 {
-    internal class AboutPageModel : ViewModelBase
+    public class AboutPageModel : ViewModelBase
     {
         private NavigationParameters _secretPageParameters;
 

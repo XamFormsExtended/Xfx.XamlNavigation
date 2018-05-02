@@ -8,7 +8,7 @@
         <StackLayout >
             <Label Text="Welcome to Xamarin.Forms! (ABOUT)"  />
             <Button Text="Secret Modal" 
-                    Command="{prism:NavigateTo 'Secret', UseModalNavigation=True}"  />
+                    Command="{prism:NavigateTo 'Secret?isModal=true', UseModalNavigation=True}"  />
             <Button Text="Secret Page" 
                     Command="{prism:NavigateTo 'Secret'}" 
                     CommandParameter="{Binding SecretPageParameters}"/>

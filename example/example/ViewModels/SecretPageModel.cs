@@ -28,8 +28,7 @@ namespace example.ViewModels
 
         public override void OnNavigatingTo(NavigationParameters parameters)
         {
-            if (parameters.TryGetValue("_prism", out NavigationParameters prism)
-                && prism.TryGetValue("UseModalNavigation", out bool isModal))
+            if (parameters.TryGetValue("isModal", out bool isModal))
             {
                 IsModal = isModal;
                 IsHierarchical = !isModal;

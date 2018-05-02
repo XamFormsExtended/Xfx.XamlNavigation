@@ -1,5 +1,6 @@
 ﻿using System;
 using Prism.Navigation;
+using Xamarin.Forms;
 
 namespace Xfx.XamlNavigation.Prism
 {
@@ -7,7 +8,7 @@ namespace Xfx.XamlNavigation.Prism
     {
         private const string NavParameterMessage = "Command Parameter must be of type NavigationParameters, XamlNavigationParameter, or XamlNavigationParameters";
 
-        public static NavigationParameters ToNavigationParameters(this object parameter)
+        public static NavigationParameters ToNavigationParameters(this object parameter, BindableObject parent)
         {
             parameter = parameter ?? new NavigationParameters();
             switch (parameter)
@@ -15,9 +16,10 @@ namespace Xfx.XamlNavigation.Prism
                 case NavigationParameters parameters:
                     return parameters;
                 case XamlNavigationParameter xamlParameter:
+                    xamlParameter.BindingContext = xamlParameter.BindingContext ?? parent.BindingContext;
                     return new NavigationParameters {{xamlParameter.Key, xamlParameter.Value}};
                 case XamlNavigationParameters xamlParameters:
-                    return xamlParameters.ToNavigationParameters();
+                    return xamlParameters.ToNavigationParameters(parent);
             }
             
             throw new ArgumentException(NavParameterMessage, nameof(parameter));

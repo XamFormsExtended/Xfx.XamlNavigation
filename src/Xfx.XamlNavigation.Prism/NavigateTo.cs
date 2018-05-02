@@ -12,18 +12,14 @@ namespace Xfx.XamlNavigation.Prism
 
         public override async void Execute(object parameter)
         {
-            var parameters = parameter.ToNavigationParameters();
-
+            var parameters = parameter.ToNavigationParameters(Bindable);
+             
             IsNavigating = true;
             RaiseCanExecuteChanged();
-            parameters.Add("_prism", new NavigationParameters
-            {
-                {nameof(Animated), Animated},
-                {nameof(Name), Name},
-                {nameof(UseModalNavigation), UseModalNavigation}
-            });
+            
+            var navigationService = GetNavigationService(Page);
+            await navigationService.NavigateAsync(Name, parameters, UseModalNavigation, Animated);
 
-            await NavigationService.NavigateAsync(Name, parameters, UseModalNavigation, Animated);
             IsNavigating = false;
             RaiseCanExecuteChanged();
         }

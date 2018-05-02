@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Threading.Tasks;
 using example.ViewModels;
 using example.Views;
 using Prism;
 using Prism.Ioc;
+using Prism.Logging;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using example.Logging;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace example
@@ -26,7 +29,17 @@ namespace example
         {
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            try
+            {
+                TaskScheduler.UnobservedTaskException += (sender, e) => {
+                    Logger.Log(e.Exception.ToString(), Category.Exception, Priority.High);
+                };
+                await NavigationService.NavigateAsync("MainPage/NavigationPage/About");
+            }
+            catch(Exception e)
+            {
+                Logger.Log(e, Category.Exception, Priority.High);
+            }
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)

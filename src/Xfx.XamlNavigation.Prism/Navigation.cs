@@ -26,14 +26,21 @@ namespace Xfx.XamlNavigation.Prism
                 typeof(Navigation),
                 true,
                 propertyChanged: OnCanNavigatePropertyChanged);
-        
+
+        public static readonly BindableProperty NavigationServiceProperty =
+            BindableProperty.CreateAttached("NavigationService",
+                typeof(INavigationService),
+                typeof(Navigation),
+                default(INavigationService));
+
+
         protected BindableObject Bindable;
         protected IEnumerable<BindableObject> BindableTree;
         protected bool IsNavigating;
-        protected INavigationService NavigationService;
-        protected Page Page;
 
         public bool AllowDoubleTap { get; set; } = false;
+
+        public Page Page { get; set; }
 
         public bool CanExecute(object parameter)
         {
@@ -61,6 +68,15 @@ namespace Xfx.XamlNavigation.Prism
 
         public static bool GetCanNavigate(BindableObject view) => (bool) view.GetValue(CanNavigateProperty);
 
+        public static INavigationService GetNavigationService(Page page)
+        {
+            var navigationService = (INavigationService) page.GetValue(NavigationServiceProperty);
+            if (navigationService == null) page.SetValue(NavigationServiceProperty, navigationService = CreateNavService(page));
+
+            return navigationService;
+        }
+
+
         public static void SetCanNavigate(BindableObject view, bool value) => view.SetValue(CanNavigateProperty, value);
 
         protected internal static Action GetRaiseCanExecuteChangedInternal(BindableObject view) => (Action) view.GetValue(RaiseCanExecuteChangedInternalProperty);
@@ -69,9 +85,17 @@ namespace Xfx.XamlNavigation.Prism
 
         protected void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 
+        private static INavigationService CreateNavService(Page view)
+        {
+            var context = (PrismApplicationBase) Application.Current;
+            var navigationService = context.Container.Resolve<INavigationService>("PageNavigationService");
+            if (navigationService is IPageAware pageAware) pageAware.Page = view;
+            return navigationService;
+        }
+
+
         private void InitNavService(IProvideValueTarget valueTargetProvider, IRootObjectProvider rootObjectProvider)
         {
-            if (NavigationService != null) return;
             // if XamlCompilation is active, IRootObjectProvider is not available, but SimpleValueTargetProvider is available
             // if XamlCompilation is inactive, IRootObjectProvider is available, but SimpleValueTargetProvider is not available
             object rootObject;
@@ -100,12 +124,7 @@ namespace Xfx.XamlNavigation.Prism
             SetRaiseCanExecuteChangedInternal(Bindable, RaiseCanExecuteChanged);
 
             if (rootObject is Page page)
-            {
-                Page = page;
-                var context = (PrismApplicationBase) Application.Current;
-                NavigationService = context.Container.Resolve<INavigationService>("PageNavigationService");
-                if (NavigationService is IPageAware pageAware) pageAware.Page = page;
-            }
+                Page = Page ?? page; // allow the user's defined page to take precedence
         }
 
         private static void OnCanNavigatePropertyChanged(BindableObject bindable, object oldvalue, object newvalue)
