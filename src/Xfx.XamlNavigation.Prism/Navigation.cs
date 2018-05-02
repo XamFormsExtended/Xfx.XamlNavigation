@@ -27,19 +27,20 @@ namespace Xfx.XamlNavigation.Prism
                 true,
                 propertyChanged: OnCanNavigatePropertyChanged);
 
-        public static readonly BindableProperty NavigationServiceProperty =
+        protected internal static readonly BindableProperty NavigationServiceProperty =
             BindableProperty.CreateAttached("NavigationService",
                 typeof(INavigationService),
                 typeof(Navigation),
                 default(INavigationService));
-        
+
+
         protected BindableObject Bindable;
         protected IEnumerable<BindableObject> BindableTree;
         protected bool IsNavigating;
 
         public bool AllowDoubleTap { get; set; } = false;
 
-        public Page Page { get; set; }
+        public Page Page { protected get; set; }
 
         public bool CanExecute(object parameter)
         {
@@ -61,37 +62,37 @@ namespace Xfx.XamlNavigation.Prism
             if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
             var valueTargetProvider = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;
             var rootObjectProvider = serviceProvider.GetService(typeof(IRootObjectProvider)) as IRootObjectProvider;
-            InitNavService(valueTargetProvider, rootObjectProvider);
+            Initialize(valueTargetProvider, rootObjectProvider);
             return this;
         }
 
         public static bool GetCanNavigate(BindableObject view) => (bool) view.GetValue(CanNavigateProperty);
 
-        public static INavigationService GetNavigationService(Page page)
-        {
-            var navigationService = (INavigationService) page.GetValue(NavigationServiceProperty);
-            if (navigationService == null) page.SetValue(NavigationServiceProperty, navigationService = CreateNavService(page));
-
-            return navigationService;
-        }
-        
         public static void SetCanNavigate(BindableObject view, bool value) => view.SetValue(CanNavigateProperty, value);
 
         protected internal static Action GetRaiseCanExecuteChangedInternal(BindableObject view) => (Action) view.GetValue(RaiseCanExecuteChangedInternalProperty);
 
         protected internal static void SetRaiseCanExecuteChangedInternal(BindableObject view, Action value) => view.SetValue(RaiseCanExecuteChangedInternalProperty, value);
 
+        protected static INavigationService GetNavigationService(Page page)
+        {
+            var navigationService = (INavigationService) page.GetValue(NavigationServiceProperty);
+            if (navigationService == null) page.SetValue(NavigationServiceProperty, navigationService = CreateNavigationService(page));
+
+            return navigationService;
+        }
+
         protected void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 
-        private static INavigationService CreateNavService(Page view)
+        private static INavigationService CreateNavigationService(Page view)
         {
             var context = (PrismApplicationBase) Application.Current;
             var navigationService = context.Container.Resolve<INavigationService>("PageNavigationService");
             if (navigationService is IPageAware pageAware) pageAware.Page = view;
             return navigationService;
         }
-        
-        private void InitNavService(IProvideValueTarget valueTargetProvider, IRootObjectProvider rootObjectProvider)
+
+        private void Initialize(IProvideValueTarget valueTargetProvider, IRootObjectProvider rootObjectProvider)
         {
             // if XamlCompilation is active, IRootObjectProvider is not available, but SimpleValueTargetProvider is available
             // if XamlCompilation is inactive, IRootObjectProvider is available, but SimpleValueTargetProvider is not available
