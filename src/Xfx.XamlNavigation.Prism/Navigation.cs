@@ -32,8 +32,7 @@ namespace Xfx.XamlNavigation.Prism
                 typeof(INavigationService),
                 typeof(Navigation),
                 default(INavigationService));
-
-
+        
         protected BindableObject Bindable;
         protected IEnumerable<BindableObject> BindableTree;
         protected bool IsNavigating;
@@ -75,8 +74,7 @@ namespace Xfx.XamlNavigation.Prism
 
             return navigationService;
         }
-
-
+        
         public static void SetCanNavigate(BindableObject view, bool value) => view.SetValue(CanNavigateProperty, value);
 
         protected internal static Action GetRaiseCanExecuteChangedInternal(BindableObject view) => (Action) view.GetValue(RaiseCanExecuteChangedInternalProperty);
@@ -92,8 +90,7 @@ namespace Xfx.XamlNavigation.Prism
             if (navigationService is IPageAware pageAware) pageAware.Page = view;
             return navigationService;
         }
-
-
+        
         private void InitNavService(IProvideValueTarget valueTargetProvider, IRootObjectProvider rootObjectProvider)
         {
             // if XamlCompilation is active, IRootObjectProvider is not available, but SimpleValueTargetProvider is available
